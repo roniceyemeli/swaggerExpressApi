@@ -1,4 +1,5 @@
 import express from 'express';
+const app = express();
 import cors from 'cors';
 import morgan from 'morgan';
 import { join, dirname } from 'path';
@@ -8,18 +9,17 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import booksRoutes from './routes/books.js';
 
-const app = express();
 const PORT = process.env.PORT || 7000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const file = join(__dirname, 'db.json')
-const adapter = new JSONFileSync(file)
-const db = new LowSync(adapter)
+const file = join(__dirname, 'db.json');
+const adapter = new JSONFileSync(file);
+const db = new LowSync(adapter);
 db.read()
-
 db.data ||= { books:[] }
 db.write()
+
 
 const options = {
     definition: {

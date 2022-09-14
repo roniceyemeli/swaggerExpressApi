@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import { nanoid } from "nanoid";
 
+
 /**
  * @swagger
  * components:
@@ -83,7 +84,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const book = req.app.db.get("books").find({ id: req.params.id }).value();
   if(!book){
-    res.sendStatus(404)
+    res.sendStatus(404);
   }
   res.send(book);
 });
