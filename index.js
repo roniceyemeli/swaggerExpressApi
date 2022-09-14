@@ -1,21 +1,25 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { Low, JSONFile } from 'lowdb'
-import swaggerUI from 'swagger-ui-express';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { LowSync, JSONFileSync } from 'lowdb';
+import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import booksRoutes from './routes/booksRoutes.js'
+import booksRoutes from './routes/books.js';
+
+const app = express();
+const PORT = process.env.PORT || 7000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const file = join(__dirname, 'db.json')
-const adapter = new JSONFile(file)
-const db = new Low(adapter)
+const adapter = new JSONFileSync(file)
+const db = new LowSync(adapter)
+db.read()
 
-db.data ||=({books:[]})
-await db.write()
+db.data ||= { books:[] }
+db.write()
 
 const options = {
     definition: {
@@ -34,9 +38,8 @@ const options = {
     apis: ["./routes/*.js"]
 }
 const specs = swaggerJsdoc(options)
-const app = express();
 
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.db = db;
 
 app.use(cors());
@@ -45,6 +48,5 @@ app.use(morgan('dev'));
 
 app.use('/books', booksRoutes)
 
-const PORT = process.env.PORT || 7000;
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`))

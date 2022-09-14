@@ -52,7 +52,6 @@ import { nanoid } from "nanoid";
  */
 
 router.get("/", (req, res) => {
-  console.log(req.app.db)
   const books = req.app.db.get("books");
   res.send(books);
 });
