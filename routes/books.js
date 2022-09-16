@@ -82,6 +82,7 @@ router.get("/", (req, res) => {
  */
 
 router.get("/:id", (req, res) => {
+  
   const book = req.app.db.get("books").find({ id: req.params.id }).value();
   if(!book){
     res.sendStatus(404);

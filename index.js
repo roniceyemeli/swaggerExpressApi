@@ -17,7 +17,7 @@ const file = join(__dirname, 'db.json');
 const adapter = new JSONFileSync(file);
 const db = new LowSync(adapter);
 db.read()
-db.data ||= { books:[] }
+db.data = { books:[] }
 db.write()
 
 
@@ -38,9 +38,10 @@ const options = {
     apis: ["./routes/*.js"]
 }
 const specs = swaggerJsdoc(options)
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
-app.db = db;
+// console.log(app.db)
+// console.log(db)
+// app.db = db;
 
 app.use(cors());
 app.use(express.json());
